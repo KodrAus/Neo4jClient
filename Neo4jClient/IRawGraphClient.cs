@@ -16,5 +16,6 @@ namespace Neo4jClient
         void ExecuteCypher(CypherQuery query);
         void ExecuteMultipleCypherQueriesInTransaction(IEnumerable<CypherQuery> queries);
         Task ExecuteCypherAsync(CypherQuery query);
+        bool IsUsingTransactionalEndpointForCypher { get; }
     }
 }

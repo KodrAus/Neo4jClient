@@ -75,7 +75,7 @@ namespace Neo4jClient.Execution
                     "Unsupported operation: Attempting to serialize something that was not a query.");
             }
 
-            if (InTransaction)
+            if (InTransaction || ((IRawGraphClient) Client).IsUsingTransactionalEndpointForCypher)
             {
                 return Client
                     .Serializer
@@ -84,6 +84,7 @@ namespace Neo4jClient.Execution
                         new CypherTransactionStatement(query, query.ResultFormat == CypherResultFormat.Rest)
                     });
             }
+
             return Client.Serializer.Serialize(new CypherApiQuery(query));
         }
 

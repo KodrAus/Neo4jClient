@@ -78,7 +78,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldPreserveOffsetValues(CypherResultMode resultMode, CypherResultFormat format, string contentFormat, string input, string expectedResult)
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<DateTimeOffsetModel>(client, resultMode, format);
             var content = string.Format(contentFormat, input);
 
@@ -101,7 +101,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeDateShouldPreserveKind(string dateTime, DateTimeKind kind)
         {
             //Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<DateTimeModel>(client, CypherResultMode.Projection, CypherResultFormat.Rest);
             var content = string.Format(ProjectionModeContentFormat, dateTime);
 
@@ -117,7 +117,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeDateShouldPreservePointInTime(string dateTime, DateTimeKind kind)
         {
             //Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<DateTimeModel>(client, CypherResultMode.Projection, CypherResultFormat.Rest);
             var content = string.Format(ProjectionModeContentFormat, dateTime);
 
@@ -144,7 +144,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapNodesInSetMode()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<Node<City>>(client, CypherResultMode.Set,
                 CypherResultFormat.Rest);
             var content = @"{
@@ -229,7 +229,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapRelationshipsInSetMode()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<RelationshipInstance<City>>(client, CypherResultMode.Set, CypherResultFormat.Rest);
             var content = @"{
                   'data' : [ [ {
@@ -292,7 +292,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapIEnumerableOfRelationshipsInAProjectionMode()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<Projection>(client, CypherResultMode.Projection, CypherResultFormat.Rest);
             var content = @"{
                   'data' : [ [ {
@@ -429,7 +429,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapIEnumerableOfNodesReturnedByCollectInAProjectionMode()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<ResultWithNestedNodeDto>(client, CypherResultMode.Projection, CypherResultFormat.Rest);
             var content = @"{
                       'data' : [ [ [ {
@@ -493,7 +493,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapIEnumerableOfNodesReturnedByCollectInColumnInProjectionMode()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<ProjectionFeedItem>(client, CypherResultMode.Projection, CypherResultFormat.DependsOnEnvironment);
             
             //The sample query that generated this data:
@@ -619,7 +619,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapNullIEnumerableOfNodesReturnedByCollectInInAProjectionMode()
         {
 
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<ResultWithNestedNodeDto>(client, CypherResultMode.Projection, CypherResultFormat.DependsOnEnvironment);
             var content =
                         @"{
@@ -640,7 +640,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapIEnumerableOfStringsInAProjectionMode()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<People>(client, CypherResultMode.Projection, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
                   'data' : [ [ [ 'Ben Tu', 'Romiko Derbynew' ] ] ],
@@ -659,7 +659,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapIEnumerableOfStringsThatAreEmptyInAProjectionMode()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<People>(client, CypherResultMode.Projection, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
                   'data' : [ [ [ ] ] ],
@@ -677,7 +677,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapIEnumerableOfStringsInSetMode()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<IEnumerable<string>>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
                   'data' : [ [ [ 'Ben Tu', 'Romiko Derbynew' ] ] ],
@@ -696,7 +696,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapArrayOfStringsInSetMode()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<string[]>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
                   'data' : [ [ [ 'Ben Tu', 'Romiko Derbynew' ] ] ],
@@ -715,7 +715,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapArrayOfIntegersInSetMode()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<int[]>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
                   'data' : [ [ [ '666', '777' ] ] ],
@@ -734,7 +734,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapIntegerInSetMode()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<int>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
                           'data' : [ [ 666 ] ],
@@ -753,7 +753,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldRespectJsonPropertyAttribute()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<UserWithJsonPropertyAttribute>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
   'columns' : [ 'Foo' ],
@@ -790,7 +790,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapNullCollectResultsWithOtherProperties()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<ModelWithCollect>(client, CypherResultMode.Projection, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
   'columns' : [ 'Fans', 'Poster' ],
@@ -833,7 +833,7 @@ namespace Neo4jClient.Test.Serialization
             // START app=node(0) MATCH app<-[?:Alternative]-alternatives RETURN app AS App, collect(alternatives) AS Alternatives;
 
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<AppAlternatives>(client, CypherResultMode.Projection, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
   'columns' : [ 'Application', 'Alternatives' ],
@@ -872,7 +872,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapNullCollectResultsWithOtherProperties_Test3()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<ModelWithCollect>(client, CypherResultMode.Projection, CypherResultFormat.DependsOnEnvironment);
             var content = @"{'columns':['Fans'],'data':[[[null,null]]]}".Replace("'", "\"");
 
@@ -889,7 +889,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapNullResult()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<object>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment);
             var content = @"{ 'columns' : [ 'db' ], 'data' : [ [ null ] ] }".Replace("'", "\"");
 
@@ -912,7 +912,7 @@ namespace Neo4jClient.Test.Serialization
 // ReSharper restore UnusedParameter.Local
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<TAnon>(client, CypherResultMode.Projection, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
                 'data' : [
@@ -954,7 +954,7 @@ namespace Neo4jClient.Test.Serialization
         // ReSharper restore UnusedParameter.Local
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<TAnon>(client, CypherResultMode.Projection, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
                 'data' : [
@@ -1084,7 +1084,7 @@ namespace Neo4jClient.Test.Serialization
         [Test]
         public void DeserializeNestedObjectsInTransactionReturningNode()
         {
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<StateCityAndLabelWithNode>(client, CypherResultMode.Projection, CypherResultFormat.Rest, true);
             var content = @"{'results':[
                 {
@@ -1163,7 +1163,7 @@ namespace Neo4jClient.Test.Serialization
         [Test]
         public void DeserializeNestedObjectsInTransaction()
         {
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<StateCityAndLabel>(client, CypherResultMode.Projection, CypherResultFormat.DependsOnEnvironment, true);
             var content = @"{'results':[
                 {
@@ -1206,7 +1206,7 @@ namespace Neo4jClient.Test.Serialization
         [Test]
         public void DeserializerTwoLevelProjectionInTransaction()
         {
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<CityAndLabel>(client, CypherResultMode.Projection, CypherResultFormat.DependsOnEnvironment, true);
             var content = @"{'results':[
                 {
@@ -1238,7 +1238,7 @@ namespace Neo4jClient.Test.Serialization
         [Test]
         public void DeserializerProjectionInTransaction()
         {
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<City>(client, CypherResultMode.Projection, CypherResultFormat.DependsOnEnvironment, true);
             var content = @"{'results':[
                 {
@@ -1268,7 +1268,7 @@ namespace Neo4jClient.Test.Serialization
         [Test]
         public void DeserializeSimpleSetInTransaction()
         {
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<int>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment, true);
             var content = @"{'results':[
                 {
@@ -1290,7 +1290,7 @@ namespace Neo4jClient.Test.Serialization
         [Test]
         public void DeserializeResultsSetInTransaction()
         {
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<City>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment, true);
             var content = @"{'results':[
                 {
@@ -1317,7 +1317,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldPreserveUtf8Characters()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<City>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
                   'data' : [
@@ -1351,7 +1351,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeShouldMapNodesToObjectsInSetModeWhenTheSourceLooksLikeANodeButTheDestinationDoesnt()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<Asset>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment);
             var content = @"
                     {
@@ -1416,7 +1416,7 @@ namespace Neo4jClient.Test.Serialization
         [Test]
         public void BadJsonShouldThrowExceptionThatIncludesJson()
         {
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<Asset>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment);
             const string content = @"xyz-json-zyx";
 
@@ -1429,7 +1429,7 @@ namespace Neo4jClient.Test.Serialization
         [Test]
         public void BadJsonShouldThrowExceptionThatIncludesFullNameOfTargetType()
         {
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<Asset>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment);
 
             var ex = Assert.Throws<ArgumentException>(() =>
@@ -1441,7 +1441,7 @@ namespace Neo4jClient.Test.Serialization
         [Test]
         public void ClassWithoutDefaultPublicConstructorShouldThrowExceptionThatExplainsThis()
         {
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<ClassWithoutDefaultPublicConstructor>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
                   'data' : [
@@ -1477,7 +1477,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeInt64IntoNullableInt64()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<long?>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
                           'data' : [ [ 123 ] ],
@@ -1501,7 +1501,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeBase64StringIntoByteArrayInProjectionResultMode()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<ModelWithByteArray>(client, CypherResultMode.Projection, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
                           'data' : [ [ 'AQIDBA==' ] ],
@@ -1520,7 +1520,7 @@ namespace Neo4jClient.Test.Serialization
         public void DeserializeBase64StringIntoByteArrayInSetResultMode()
         {
             // Arrange
-            var client = Substitute.For<IGraphClient>();
+            var client = Substitute.For<IRawGraphClient>();
             var deserializer = new CypherJsonDeserializer<byte[]>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment);
             var content = @"{
                           'data' : [ [ 'AQIDBA==' ] ],

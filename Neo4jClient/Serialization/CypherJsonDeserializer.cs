@@ -29,11 +29,11 @@ namespace Neo4jClient.Serialization
         {
             this.client = client;
             this.resultMode = resultMode;
-            this.inTransaction = inTransaction;
+            this.inTransaction = inTransaction || ((IRawGraphClient) client).IsUsingTransactionalEndpointForCypher;
             // here is where we decide if we should deserialize as transactional or REST endpoint data format.
             if (resultFormat == CypherResultFormat.DependsOnEnvironment)
             {
-                this.resultFormat = inTransaction ? CypherResultFormat.Transactional : CypherResultFormat.Rest;
+                this.resultFormat = this.inTransaction ? CypherResultFormat.Transactional : CypherResultFormat.Rest;
             }
             else
             {

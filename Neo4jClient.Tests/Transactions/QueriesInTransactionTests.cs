@@ -262,12 +262,13 @@ namespace Neo4jClient.Test.Transactions
         }
 
         [Test]
-        public void SuppressTransactionScopeShouldNotEmitTransactionalQuery()
+        public void SuppressTransactionScopeShouldEmitTransactionalQuery()
         {
             var initTransactionRequest = MockRequest.PostJson("/transaction", @"{
                 'statements': [{'statement': 'MATCH n\r\nRETURN count(n)', 'resultDataContents':[], 'parameters': {}}]}");
 
-            var nonTransactionalRequest = MockRequest.PostJson("/cypher", @"{'query': 'MATCH n\r\nRETURN count(n)', 'params': {}}");
+            var nonTransactionalRequest = MockRequest.PostJson("/transaction/commit", @"{
+                'statements': [{'statement': 'MATCH n\r\nRETURN count(n)', 'resultDataContents':[], 'parameters': {}}]}");
 
             var commitTransactionRequest = MockRequest.PostJson("/transaction/1/commit", @"{
                 'statements': []}");

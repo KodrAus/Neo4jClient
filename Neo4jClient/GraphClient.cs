@@ -105,7 +105,7 @@ namespace Neo4jClient
         {
             get { return RootApiResponse != null; }
         }
-
+        
         public virtual void Connect()
         {
             if (IsConnected)
@@ -162,8 +162,13 @@ namespace Neo4jClient
 
                 if (RootApiResponse.Cypher != null)
                 {
-                    RootApiResponse.Cypher =
-                        RootApiResponse.Cypher.Substring(baseUriLengthToTrim);
+                    if (string.IsNullOrWhiteSpace(RootApiResponse.Transaction))
+                        RootApiResponse.Cypher = RootApiResponse.Cypher.Substring(baseUriLengthToTrim);
+                    else
+                    {
+                        RootApiResponse.Cypher = RootApiResponse.Transaction + "/commit";
+                        _isUsingTransactionalEndpointForCypher = true;
+                    }
                 }
 
                 rootNode = string.IsNullOrEmpty(RootApiResponse.ReferenceNode)
@@ -981,8 +986,7 @@ namespace Neo4jClient
                 bool inTransaction = InTransaction;
 
                 var response = await PrepareCypherRequest<TResult>(query, context.Policy).ConfigureAwait(false);
-                var deserializer = new CypherJsonDeserializer<TResult>(this, query.ResultMode, query.ResultFormat,
-                    inTransaction);
+                var deserializer = new CypherJsonDeserializer<TResult>(this, query.ResultMode, query.ResultFormat, inTransaction);
                 if (inTransaction)
                 {
                     response.DeserializationContext.DeserializationContext.JsonContractResolver =
@@ -1058,6 +1062,13 @@ namespace Neo4jClient
             context.Policy.AfterExecution(TransactionHttpUtils.GetMetadataFromResponse(response.ResponseObject), null);
             
             context.Complete(query);
+        }
+
+        private bool _isUsingTransactionalEndpointForCypher;
+
+        bool IRawGraphClient.IsUsingTransactionalEndpointForCypher
+        {
+            get { return _isUsingTransactionalEndpointForCypher; }
         }
 
         void IRawGraphClient.ExecuteMultipleCypherQueriesInTransaction(IEnumerable<CypherQuery> queries)
