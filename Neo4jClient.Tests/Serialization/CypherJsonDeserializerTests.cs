@@ -1266,6 +1266,30 @@ namespace Neo4jClient.Test.Serialization
         }
 
         [Test]
+        public void DeserializeAsTransaction_WhenNotInTransactionButUsingTxEndPoint()
+        {
+            var client = Substitute.For<IRawGraphClient>();
+            client.IsUsingTransactionalEndpointForCypher.Returns(true);
+
+            var deserializer = new CypherJsonDeserializer<int>(client, CypherResultMode.Set, CypherResultFormat.DependsOnEnvironment, true);
+            var content = @"{'results':[
+                {
+                    'columns':[
+                        'count(n)'
+                    ],
+                    'data':[
+                        {
+                            'row': [3]
+                        }
+                    ]
+                }
+            ]}";
+            var results = deserializer.Deserialize(content).ToArray();
+            Assert.AreEqual(1, results.Length);
+            Assert.AreEqual(3, results[0]);
+        }
+
+        [Test]
         public void DeserializeSimpleSetInTransaction()
         {
             var client = Substitute.For<IRawGraphClient>();

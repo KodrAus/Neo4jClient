@@ -47,7 +47,12 @@ namespace Neo4jClient
         private RootNode rootNode;
 
         private CypherCapabilities cypherCapabilities = CypherCapabilities.Default;
-        
+        private bool isUsingTransactionalEndpointForCypher;
+
+        bool IRawGraphClient.IsUsingTransactionalEndpointForCypher
+        {
+            get { return isUsingTransactionalEndpointForCypher; }
+        }
 
         public bool UseJsonStreamingIfAvailable { get; set; }
 
@@ -167,7 +172,7 @@ namespace Neo4jClient
                     else
                     {
                         RootApiResponse.Cypher = RootApiResponse.Transaction + "/commit";
-                        _isUsingTransactionalEndpointForCypher = true;
+                        isUsingTransactionalEndpointForCypher = true;
                     }
                 }
 
@@ -732,7 +737,7 @@ namespace Neo4jClient
             get
             {
                 CheckRoot();
-                return BuildUri(RootApiResponse.Transaction);
+                return string.IsNullOrWhiteSpace(RootApiResponse.Transaction) ? null : BuildUri(RootApiResponse.Transaction);
             }
         }
 
@@ -1062,13 +1067,6 @@ namespace Neo4jClient
             context.Policy.AfterExecution(TransactionHttpUtils.GetMetadataFromResponse(response.ResponseObject), null);
             
             context.Complete(query);
-        }
-
-        private bool _isUsingTransactionalEndpointForCypher;
-
-        bool IRawGraphClient.IsUsingTransactionalEndpointForCypher
-        {
-            get { return _isUsingTransactionalEndpointForCypher; }
         }
 
         void IRawGraphClient.ExecuteMultipleCypherQueriesInTransaction(IEnumerable<CypherQuery> queries)

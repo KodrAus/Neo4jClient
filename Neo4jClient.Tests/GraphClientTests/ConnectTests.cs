@@ -47,6 +47,28 @@ namespace Neo4jClient.Test.GraphClientTests
         }
 
         [Test]
+        public void ShouldSetIsUsingTransactionalEndPointForCypher_WhenDbReturnsTxEndPoint()
+        {
+            using (var testHarness = new RestTestHarness())
+            {
+                var graphClient = (GraphClient) testHarness.CreateAndConnectGraphClient(RestTestHarness.Neo4jVersion.Neo20);
+                Assert.IsNotNull(graphClient.TransactionEndpoint);
+                Assert.IsTrue(((IRawGraphClient)graphClient).IsUsingTransactionalEndpointForCypher);
+            }
+        }
+
+        [Test]
+        public void ShouldNotSetIsUsingTransactionalEndPointForCypher_WhenDbReturnsNoEndPoint()
+        {
+            using (var testHarness = new RestTestHarness())
+            {
+                var graphClient = (GraphClient)testHarness.CreateAndConnectGraphClient(RestTestHarness.Neo4jVersion.Neo19);
+                Assert.IsNull(graphClient.TransactionEndpoint);
+                Assert.IsFalse(((IRawGraphClient)graphClient).IsUsingTransactionalEndpointForCypher);
+            }
+        }
+
+        [Test]
         [ExpectedException(ExpectedMessage = "The graph client is not connected to the server. Call the Connect method first.")]
         public void RootNode_ShouldThrowInvalidOperationException_WhenNotConnectedYet()
         {
